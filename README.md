@@ -2,6 +2,16 @@
 
 A full-stack web application that analyzes any publicly accessible webpage and returns a structured report with HTTP status, response time, SEO metadata, and accessibility indicators.
 
+## Live Demo
+
+| | |
+|---|---|
+| **Frontend** | [page-pulse-website-analyzer-orpin.vercel.app](https://page-pulse-website-analyzer-orpin.vercel.app/) |
+| **Backend API** | [page-pulse-website-analyzer.onrender.com](https://page-pulse-website-analyzer.onrender.com/) |
+| **Health check** | [`/health`](https://page-pulse-website-analyzer.onrender.com/health) |
+
+> Backend is hosted on Render's free tier, which spins down after inactivity. The first request after a period of idle time may take 30–50s to respond while the service cold-starts — subsequent requests are fast.
+
 ---
 
 ## Features
@@ -47,7 +57,9 @@ page-pulse/
 
 ---
 
-## Architectural Decisions
+## Design Decisions
+
+Three decisions worth calling out, with the reasoning behind each:
 
 ### 1. `asyncWrapper` over scattered `try/catch`
 Every route handler is wrapped in a single higher-order function that pipes any thrown error to Express's `next(err)`. This means controllers contain zero boilerplate error handling, and a single middleware owns the entire error-response contract. This pattern is standard in production Express codebases.
@@ -60,13 +72,13 @@ All async state — status machine (`idle/loading/success/error`), data, error i
 
 ---
 
-## Installation
+## Setup Instructions
 
 **Prerequisites:** Node.js ≥ 18
 
 ```bash
 # Clone the repository
-git clone <repo-url>
+git clone https://github.com/BlueByteRAMbo/Page-Pulse-Website-Analyzer
 cd page-pulse
 ```
 
@@ -105,7 +117,7 @@ The Vite dev server is configured to proxy `/api` requests to port 4000, so no C
 
 ---
 
-## API Documentation
+## API Contract
 
 ### `POST /api/analyze`
 
@@ -219,24 +231,32 @@ The test suite uses **Vitest** and **Supertest**. Axios is mocked so no real net
 
 ## Deployment
 
+This project is deployed as two independent services, as reflected in the [Live Demo](#live-demo) links above.
+
 ### Backend → Render
 
+Live at: `https://page-pulse-website-analyzer.onrender.com`
+
 1. Create a new **Web Service** on Render
-2. Connect your GitHub repository
+2. Connect this GitHub repository
 3. Set **Root Directory** to `backend`
 4. Set **Start Command** to `npm start`
-5. Add environment variables:
+5. Environment variables:
    - `NODE_ENV=production`
-   - `ALLOWED_ORIGINS=https://your-frontend.vercel.app`
-   - `PORT=4000` (Render may override this)
+   - `ALLOWED_ORIGINS=https://page-pulse-website-analyzer-orpin.vercel.app`
+   - `PORT` (Render sets this automatically — no need to hardcode it)
 
 ### Frontend → Vercel
 
-1. Import the repository into Vercel
+Live at: `https://page-pulse-website-analyzer-orpin.vercel.app`
+
+1. Import this repository into Vercel
 2. Set **Root Directory** to `frontend`
-3. Add environment variable:
-   - `VITE_API_BASE_URL=https://your-backend.onrender.com`
+3. Environment variable:
+   - `VITE_API_BASE_URL=https://page-pulse-website-analyzer.onrender.com`
 4. Deploy
+
+To redeploy with your own instance, replace the two URLs above with your own Render/Vercel service URLs.
 
 ---
 
