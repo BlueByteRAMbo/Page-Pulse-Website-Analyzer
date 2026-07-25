@@ -13,15 +13,16 @@ const { port, allowedOrigins, nodeEnv } = env;
 
 const app = express();
 
-// Security
+// Security headers
 app.use(helmet());
 
-// CORS — strict in production
+// CORS — only allow listed origins
 app.use(
   cors({
     origin: (origin, callback) => {
+      // Allow server-to-server or health-check calls (no Origin header)
       if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin) || nodeEnv === 'development') {
+      if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
       callback(new Error(`CORS: origin ${origin} is not allowed.`));
@@ -31,15 +32,16 @@ app.use(
   })
 );
 
-// Logging — skip in test to keep output clean
+// Logging
 if (nodeEnv !== 'test') {
-  app.use(morgan('dev'));
+  // 'combined' gives structured logs on Render; 'dev' is colourised for local
+  app.use(morgan(nodeEnv === 'production' ? 'combined' : 'dev'));
 }
 
-// Body parsing
+// Body parsing — cap at 16 KB to limit abuse surface
 app.use(express.json({ limit: '16kb' }));
 
-// Health check
+// Health check — used by Render for zero-downtime deploys
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
 // API routes
