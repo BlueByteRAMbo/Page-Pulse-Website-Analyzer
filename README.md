@@ -5,8 +5,7 @@ A full-stack web application that analyzes any publicly accessible webpage and r
 ## Live Demo
 | | |
 |---|---|
-| **Live Demo Link** | [Click Here to View Video](
-https://canva.link/7c2fb1x15gonbuq) |
+| **Live Demo Link** | [Click Here to View Video](https://canva.link/7c2fb1x15gonbuq) |
 | **Frontend** | [page-pulse-website-analyzer-orpin.vercel.app](https://page-pulse-website-analyzer-orpin.vercel.app/) |
 | **Backend API** | [page-pulse-website-analyzer.onrender.com](https://page-pulse-website-analyzer.onrender.com/) |
 | **Health check** | [`/health`](https://page-pulse-website-analyzer.onrender.com/health) |
